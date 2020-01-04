@@ -1,35 +1,51 @@
 import os
 from datetime import datetime
+import argparse
+
+parser = argparse.ArgumentParser(
+    description='Preprocess of LDC corpus')
+parser.add_argument('-pair', type=str, default='zh-en', metavar='S')
+parser.add_argument('-len', type=int, default=80, metavar='N')
+parser.add_argument('-token', type=str,default='bpe',metavar='S')
+parser.add_argument('-model', type=str,default='lstm',metavar='S')
 
 if __name__ == "__main__":
-    data_path = 'trial/ldc/'
+    args = parser.parse_args()
+    
+    pair = args.pair
+    max_len = args.len
+    token = args.token
+
+    data_path = 'trial/ldc_data/'
     run_path = 'trial/ldc_exp/'
 
     pair = 'zh-en'
     max_len = 80
 
-    save_folder = run_path + pair + '/word/'
-    train_path = save_folder + 'word' + str(max_len)
+    train_folder = os.path.join(data_path,pair,token) +'/'
+    train_path = train_folder + token + str(max_len)
 
-    model = 'lstm'
+    save_folder = os.path.join(run_path,pair,token) +'/'
 
-    model_folder = save_folder + model
-    if not os.path.exists(model_folder):
-        os.makedirs(model_folder)
+    model = args.model
 
-    model_path = model_folder + '/word'
+    save_folder = save_folder + model + '/'
+    if not os.path.exists(save_folder):
+        os.makedirs(save_folder)
+
+    model_path = save_folder + token
     exp_id = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_path = model_folder + '/log'+exp_id+'.txt'
+    log_path = save_folder + '/log'+exp_id+'.txt'
 
-    cmd = 'export CUDA_VISIBLE_DEVICES=0,1 \n'
+    cmd = 'export CUDA_VISIBLE_DEVICES=1 \n'
 
     cmd += '\
         onmt_train \
         -data %s \
         -save_model %s \
         -log_file %s \
-        -world_size 2 \
-        -gpu_ranks 0 1\
+        -world_size 1 \
+        -gpu_ranks 0 \
         -train_steps 400000 \
         -save_checkpoint_steps 10000 \
         #-layers 4 \
