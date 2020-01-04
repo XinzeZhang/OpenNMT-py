@@ -16,22 +16,22 @@ if __name__ == "__main__":
     token = args.token
 
     data_path = 'trial/ldc/'
-    run_path = 'trial/ldc_exp/'
+    run_path = 'trial/ldc_data/'
 
     valid_folder='nist03/nist03.'
 
-    en_path=data_path+'train.cn-en.en'
-    en_codes_path=run_path+'train.en.codes'
-    en_bpe_path=run_path+'train.en.bpe'
+    en_path=data_path+'train.cn-en.en.atok'
     en_vocab = 'trial/ldc/vocab.en.txt'
+    # en_codes_path=run_path+'train.en.codes'
+    en_bpe_path=run_path+'train.en.bpe'
 
     en_valid_path=data_path+valid_folder+'en0'
     en_valid_bpe_path=run_path+valid_folder+'en0.bpe'
 
-    zh_path=data_path+'train.cn-en.zh'
-    zh_codes_path=run_path+'train.zh.codes'
-    zh_bpe_path=run_path+'train.zh.bpe'
+    zh_path=data_path+'train.cn-en.zh.atok'
     zh_vocab = 'trial/ldc/vocab.cn.txt'
+    # zh_codes_path=run_path+'train.zh.codes'
+    zh_bpe_path=run_path+'train.zh.bpe'
 
     zh_valid_path=data_path+valid_folder+'cn'
     zh_valid_bpe_path=run_path+valid_folder+'zh.bpe'
@@ -51,13 +51,18 @@ if __name__ == "__main__":
                         -valid_src %s \
                         -valid_tgt %s \
                         -save_data %s \
-                        -src_vocab %s \
-                        -tgt_vocab %s \
-                        -src_vocab_size 30000 \
-                        -tgt_vocab_size 30000 \
                         -src_seq_length %s \
                         -tgt_seq_length %s \
-                        ' % (zh_path, en_path, zh_valid_path,en_valid_path, save_path, zh_vocab,en_vocab,str(max_len), str(max_len))
+                        ' % (zh_path, en_path, zh_valid_path,en_valid_path, save_path, str(max_len), str(max_len))
         elif token == 'bpe':
-            
+            pre_cmd = 'onmt_preprocess \
+                        -train_src %s \
+                        -train_tgt %s \
+                        -valid_src %s \
+                        -valid_tgt %s \
+                        -save_data %s \
+                        -src_seq_length %s \
+                        -tgt_seq_length %s \
+                        ' % (zh_bpe_path, en_bpe_path, zh_valid_bpe_path,en_valid_bpe_path, save_path, str(max_len), str(max_len))
+
         os.system(pre_cmd)

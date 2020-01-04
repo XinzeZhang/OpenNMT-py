@@ -32,7 +32,7 @@ if __name__ == "__main__":
         -gpu_ranks 0 1\
         -train_steps 400000 \
         -save_checkpoint_steps 10000 \
-        -layers 4 \
+        #-layers 4 \
         # -global_attention mlp \
         # -rnn_type LSTM \
         # -encoder_type brnn \
